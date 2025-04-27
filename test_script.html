@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測試Google Apps Script連接</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #333;
+        }
+        .test-button {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #f9f9f9;
+            min-height: 100px;
+        }
+        pre {
+            background: #eee;
+            padding: 10px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>測試Google Apps Script連接</h1>
+    
+    <p>這個頁面用於測試Google Apps Script的連接。點擊下面的按鈕將發送測試數據到您的Google表格。</p>
+    
+    <button class="test-button" onclick="testDirectURL()">測試1: 直接通過URL訪問(瀏覽器重定向)</button>
+    <button class="test-button" onclick="testFetchGet()">測試2: 使用fetch GET請求</button>
+    <button class="test-button" onclick="testFetchPost()">測試3: 使用fetch POST請求</button>
+    
+    <div class="result" id="result">
+        <p>結果將顯示在這裡...</p>
+    </div>
+    
+    <h2>URL測試參數</h2>
+    <pre id="urlInfo"></pre>
+    
+    <script>
+        // Google Apps Script URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbysY-Zsg-X7zFW99TF--KpxCgF5XfmWl9TWuNQ31eg3kqf5_kq4I16ofic8FOuhw2hUBg/exec';
+        
+        // 測試數據
+        const testData = {
+            name: '測試用戶',
+            email: 'test@example.com',
+            phone: '0912345678',
+            message: '這是一條測試訊息 - ' + new Date().toLocaleString(),
+            timestamp: new Date().toISOString()
+        };
+        
+        // 顯示URL信息
+        function showURLInfo() {
+            const url = new URL(scriptURL);
+            
+            // 添加參數
+            Object.keys(testData).forEach(key => {
+                url.searchParams.append(key, testData[key]);
+            });
+            
+            document.getElementById('urlInfo').textContent = url.toString();
+        }
+        
+        // 初始化時顯示URL
+        showURLInfo();
+        
+        // 測試1: 直接通過URL訪問
+        function testDirectURL() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>正在通過URL重定向測試...</p>';
+            
+            // 創建帶參數的URL
+            const url = new URL(scriptURL);
+            Object.keys(testData).forEach(key => {
+                url.searchParams.append(key, testData[key]);
+            });
+            
+            // 在新窗口中打開URL
+            window.open(url.toString(), '_blank');
+            
+            resultDiv.innerHTML += '<p>已在新窗口中打開URL，請檢查Google表格是否收到數據</p>';
+        }
+        
+        // 測試2: 使用fetch GET請求
+        async function testFetchGet() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>正在使用fetch GET請求測試...</p>';
+            
+            // 創建帶參數的URL
+            const url = new URL(scriptURL);
+            Object.keys(testData).forEach(key => {
+                url.searchParams.append(key, testData[key]);
+            });
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    mode: 'no-cors' // 解決跨域問題
+                });
+                
+                resultDiv.innerHTML += `
+                    <p>請求已發送!</p>
+                    <p>由於使用no-cors模式，無法讀取響應內容</p>
+                    <p>請檢查Google表格是否收到數據</p>
+                `;
+                
+                console.log('GET請求響應:', response);
+            } catch (error) {
+                resultDiv.innerHTML += `
+                    <p style="color: red;">錯誤: ${error.message}</p>
+                `;
+                console.error('GET請求錯誤:', error);
+            }
+        }
+        
+        // 測試3: 使用fetch POST請求
+        async function testFetchPost() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>正在使用fetch POST請求測試...</p>';
+            
+            try {
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors', // 解決跨域問題
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                resultDiv.innerHTML += `
+                    <p>POST請求已發送!</p>
+                    <p>由於使用no-cors模式，無法讀取響應內容</p>
+                    <p>請檢查Google表格是否收到數據</p>
+                `;
+                
+                console.log('POST請求響應:', response);
+            } catch (error) {
+                resultDiv.innerHTML += `
+                    <p style="color: red;">錯誤: ${error.message}</p>
+                `;
+                console.error('POST請求錯誤:', error);
+            }
+        }
+    </script>
+</body>
+</html> 
