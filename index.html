@@ -201,33 +201,4 @@
                 <div style="margin-top: 20px; text-align: left; font-size: 14px;">
                     <h4>關於常見錯誤的說明：</h4>
                     <p><strong>"Permissions policy violation: accelerometer"</strong><br>
-                       這是提示訊息，非錯誤。表示瀏覽器阻止了p5.js嘗試存取裝置的加速度感應器。
-                       這不會影響程式正常運行，可以忽略此訊息。</p>
-                       
-                    <p><strong>"[object Arguments]is not a valid color representation"</strong><br>
-                       這是色彩處理錯誤，通常發生在視窗調整大小時。這表示程式嘗試處理未正確初始化的顏色。
-                       我們已經加入修復程式碼來自動處理此問題，您可以繼續使用應用程式。</p>
-                </div>`;
-                
-                console.log('P5.js sketch embedded from editor');
-            } catch (e) {
-                console.error('Failed to embed p5.js sketch:', e);
-                document.getElementById('error-message').style.display = 'block';
-            }
-        });
-        
-        // Prevent page scrolling on mobile devices
-        document.body.addEventListener('touchstart', function(e) {
-            if (e.target == document.body) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        
-        document.body.addEventListener('touchmove', function(e) {
-            if (e.target == document.body) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-    </script>
-</body>
-</html>
+                       這是提示訊息，非錯誤。表示瀏覽器阻止了p5.js嘗試存取裝置的加速度感�
