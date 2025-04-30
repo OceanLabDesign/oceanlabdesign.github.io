@@ -1,38 +1,24 @@
-# Option 1: Standard merge workflow (recommended for preserving all changes)
-echo "-- OPTION 1: Standard merge workflow --"
-echo "Running: git pull origin main"
-git pull origin main
+# 建立新分支並推送（取代原有的拉取操作）
 
-# Option 2: If you have merge conflicts that are difficult to resolve
-echo ""
-echo "-- OPTION 2: If you have merge conflicts --"
-echo "1. Stash your changes first"
-echo "   git stash"
-echo "2. Pull the remote changes"
-echo "   git pull origin main"
-echo "3. Apply your stashed changes"
-echo "   git stash pop"
-echo "4. Resolve any conflicts manually"
-echo "5. Add and commit"
-echo "   git add ."
-echo "   git commit -m \"Resolved merge conflicts\""
+# 1. 建立並切換到新分支
+# 將 'new-feature' 替換為你想要的分支名稱
+NEW_BRANCH="new-feature-$(date +%Y%m%d)"
+echo "建立並切換到新分支: $NEW_BRANCH"
+git checkout -b $NEW_BRANCH
 
-# Option 3: If you want to override remote changes (use with caution!)
-echo ""
-echo "-- OPTION 3: Force push (CAUTION: overwrites remote history) --"
-echo "Only use this if you're sure you want to replace remote content!"
-echo "git push origin main --force"
+# 2. 將當前修改加入暫存區
+echo "將修改加入暫存區"
+git add .
 
-# Option 4: Create a new branch and push that instead
-echo ""
-echo "-- OPTION 4: Create a new branch --"
-echo "1. Create and switch to a new branch"
-echo "   git checkout -b new-changes"
-echo "2. Push the new branch"
-echo "   git push origin new-changes"
-echo "3. Then create a pull request on GitHub to merge your changes"
+# 3. 提交變更
+echo "提交變更"
+git commit -m "新增功能：頂部 p5.js 草稿疊加"
+
+# 4. 推送新分支到遠端
+echo "推送新分支到 GitHub"
+git push -u origin $NEW_BRANCH
 
 echo ""
-echo "Choose the option that best suits your situation."
-echo "After resolving conflicts and committing, try pushing again with:"
-echo "git push origin main"
+echo "完成! 新分支 '$NEW_BRANCH' 已推送到 GitHub"
+echo "前往 GitHub 並創建 Pull Request 以將變更合併到 main 分支"
+echo "https://github.com/OceanLabDesign/oceanlabdesign.github.io/pull/new/$NEW_BRANCH"
