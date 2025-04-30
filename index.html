@@ -166,6 +166,8 @@
                 topSketchContainer.style.height = '100vh';
                 topSketchContainer.style.zIndex = '2000'; // 確保在最上層
                 topSketchContainer.style.pointerEvents = 'none'; // 初始不攔截點擊事件
+                // 確保容器背景透明
+                topSketchContainer.style.backgroundColor = 'transparent';
                 
                 const topSketch = document.createElement('iframe');
                 topSketch.src = 'https://editor.p5js.org/ks.architect01/full/Jmgi-uD9W';
@@ -173,13 +175,15 @@
                 topSketch.style.height = '100vh';
                 topSketch.style.border = 'none';
                 topSketch.style.background = 'transparent'; // 透明背景
+                // 確保 iframe 本身也完全透明
+                topSketch.setAttribute('allowtransparency', 'true');
+                topSketch.style.backgroundColor = 'transparent';
                 topSketch.style.pointerEvents = 'auto'; // 允許在 iframe 內互動
-                topSketch.allowTransparency = 'true'; // 舊瀏覽器支援
                 
                 topSketchContainer.appendChild(topSketch);
                 document.body.appendChild(topSketchContainer);
                 
-                // 確保互動層在正確的位置
+                // 確保互動層在正確的位置並且透明
                 const interactionLayer = document.createElement('div');
                 interactionLayer.style.position = 'absolute';
                 interactionLayer.style.top = '40px';
@@ -187,7 +191,8 @@
                 interactionLayer.style.width = '100%';
                 interactionLayer.style.height = 'calc(100vh - 40px)';
                 interactionLayer.style.zIndex = '1500'; // 低於頂部草稿但高於底部草稿
-                interactionLayer.style.pointerEvents = 'auto';
+                interactionLayer.style.backgroundColor = 'transparent';
+                
                 document.body.appendChild(interactionLayer);
                 
                 // 更新說明文字，加入中文說明
