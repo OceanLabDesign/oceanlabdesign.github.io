@@ -157,20 +157,42 @@
                 iframeContainer.appendChild(iframe);
                 document.body.appendChild(iframeContainer);
                 
-                // 建立一個互動層，只允許與 p5.js 畫布部分互動
+                // 建立第二個 iframe 來顯示新的 p5.js 草稿，並置於最上層
+                const topSketchContainer = document.createElement('div');
+                topSketchContainer.style.position = 'absolute';
+                topSketchContainer.style.top = '0';
+                topSketchContainer.style.left = '0';
+                topSketchContainer.style.width = '100%';
+                topSketchContainer.style.height = '100vh';
+                topSketchContainer.style.zIndex = '2000'; // 確保在最上層
+                topSketchContainer.style.pointerEvents = 'none'; // 初始不攔截點擊事件
+                
+                const topSketch = document.createElement('iframe');
+                topSketch.src = 'https://editor.p5js.org/ks.architect01/full/Jmgi-uD9W';
+                topSketch.style.width = '100%';
+                topSketch.style.height = '100vh';
+                topSketch.style.border = 'none';
+                topSketch.style.background = 'transparent'; // 透明背景
+                topSketch.style.pointerEvents = 'auto'; // 允許在 iframe 內互動
+                topSketch.allowTransparency = 'true'; // 舊瀏覽器支援
+                
+                topSketchContainer.appendChild(topSketch);
+                document.body.appendChild(topSketchContainer);
+                
+                // 確保互動層在正確的位置
                 const interactionLayer = document.createElement('div');
                 interactionLayer.style.position = 'absolute';
-                interactionLayer.style.top = '40px'; // 從頂部 40px 開始允許互動
+                interactionLayer.style.top = '40px';
                 interactionLayer.style.left = '0';
                 interactionLayer.style.width = '100%';
                 interactionLayer.style.height = 'calc(100vh - 40px)';
-                interactionLayer.style.zIndex = '1002';
-                interactionLayer.style.pointerEvents = 'auto'; // 允許此區域的點擊穿透到 iframe
+                interactionLayer.style.zIndex = '1500'; // 低於頂部草稿但高於底部草稿
+                interactionLayer.style.pointerEvents = 'auto';
                 document.body.appendChild(interactionLayer);
                 
                 // 更新說明文字，加入中文說明
                 const instructions = document.querySelector('.instructions');
-                instructions.style.zIndex = '1003'; // 確保在最上層
+                instructions.style.zIndex = '2001'; // 確保在最頂層草稿之上
                 instructions.innerHTML = '按 "R" 更換顏色 | 按 "N" 重置細胞<br>' +
                                         '<small>Press "R" to change colors | Press "N" to reset cells</small>';
                 
