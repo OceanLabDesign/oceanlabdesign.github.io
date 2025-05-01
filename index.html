@@ -108,11 +108,11 @@
             right: 20px;
             top: 50%;
             transform: translateY(-50%);
-            color: white;
+            color: white; /* 初始顏色，將由JavaScript動態設置 */
             font-family: 'Century Gothic', Arial, sans-serif;
             font-size: 22px;
             opacity: 0;
-            transition: opacity 0.5s ease-in;
+            transition: opacity 0.5s ease-in, color 0.5s ease;
             text-align: right;
         }
         
@@ -185,6 +185,59 @@
 
             console.log('Color handling patches applied');
         });
+        
+        // 顏色對比生成工具，在HSL色彩空間中操作
+        class ColorGenerator {
+            constructor() {
+                this.currentHue = Math.random() * 360; // 隨機初始色相
+                this.p5Instance = null;
+            }
+            
+            // 初始化P5實例
+            initP5() {
+                if (this.p5Instance) return;
+                
+                this.p5Instance = new p5((p) => {
+                    p.setup = () => {
+                        // 創建一個1x1像素的隱藏canvas
+                        const canvas = p.createCanvas(1, 1);
+                        canvas.style('display', 'none');
+                        p.colorMode(p.HSB, 360, 100, 100);
+                    };
+                });
+            }
+            
+            // 生成新的隨機顏色
+            generateNewColor() {
+                this.currentHue = Math.random() * 360;
+                return this.getCurrentColor();
+            }
+            
+            // 獲取當前顏色的HSL表示
+            getCurrentColor() {
+                return `hsl(${this.currentHue}, 80%, 65%)`;
+            }
+            
+            // 獲取當前顏色的對比色（色相差180度）
+            getContrastColor() {
+                let contrastHue = (this.currentHue + 180) % 360;
+                return `hsl(${contrastHue}, 100%, 70%)`;
+            }
+            
+            // 使用P5.js的方式生成顏色
+            getP5ContrastColor() {
+                this.initP5();
+                if (!this.p5Instance) return this.getContrastColor();
+                
+                const p = this.p5Instance;
+                const baseColor = p.color(this.currentHue, 80, 90);
+                const contrastHue = (this.currentHue + 180) % 360;
+                return p.color(contrastHue, 95, 95);
+            }
+        }
+        
+        // 全局顏色生成器實例
+        const colorGen = new ColorGenerator();
     </script>
 </head>
 <body>
@@ -210,6 +263,22 @@
             if (e.message && (e.message.includes('CORS') || e.message.includes('Failed to fetch') || e.message.includes('load'))) {
                 document.getElementById('error-message').style.display = 'block';
                 console.error('Resource loading error:', e.message);
+            }
+        });
+        
+        // 更新文字顏色函數
+        function updateTextColor() {
+            const textElement = document.getElementById('right-top-bar-text');
+            if (textElement) {
+                textElement.style.color = colorGen.getContrastColor();
+            }
+        }
+        
+        // 監聽按鍵事件，當按下'R'鍵時重新生成顏色
+        document.addEventListener('keydown', function(event) {
+            if (event.key.toLowerCase() === 'r') {
+                colorGen.generateNewColor();
+                updateTextColor();
             }
         });
         
@@ -306,6 +375,8 @@
                     
                     // 當動畫進行到70%時（約0.56秒後），顯示文字
                     setTimeout(function() {
+                        // 設置初始對比顏色
+                        updateTextColor();
                         barText.style.opacity = '1';
                     }, 560);
                     
