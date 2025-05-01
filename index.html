@@ -150,23 +150,22 @@
                 iframe.style.border = 'none';
                 iframe.style.position = 'absolute';
                 
-                // 禁用 iframe 內容的指針事件，防止頂部交互
-                iframe.style.pointerEvents = 'none';
+                // 啟用 iframe 內容的互動事件，允許點擊超連結
+                iframe.style.pointerEvents = 'auto'; // 從 'none' 改為 'auto'
                 
                 // 添加 iframe 到容器
                 iframeContainer.appendChild(iframe);
                 document.body.appendChild(iframeContainer);
                 
-                
-                // 確保互動層在正確的位置
+                // 更新互動層，確保不會阻擋超連結點擊
                 const interactionLayer = document.createElement('div');
                 interactionLayer.style.position = 'absolute';
                 interactionLayer.style.top = '40px';
                 interactionLayer.style.left = '0';
                 interactionLayer.style.width = '100%';
                 interactionLayer.style.height = 'calc(100vh - 40px)';
-                interactionLayer.style.zIndex = '1500'; // 低於頂部草稿但高於底部草稿
-                interactionLayer.style.pointerEvents = 'auto';
+                interactionLayer.style.zIndex = '1500'; 
+                interactionLayer.style.pointerEvents = 'none'; // 從 'auto' 改為 'none' 以允許點擊傳遞到iframe
                 document.body.appendChild(interactionLayer);
             } catch (error) {
                 console.error('Error initializing iframe:', error);
@@ -174,3 +173,4 @@
         });
     </script>
 </body>
+</html>
