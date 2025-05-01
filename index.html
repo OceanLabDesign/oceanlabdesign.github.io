@@ -332,32 +332,33 @@
             let topStartY, belowStartY;
 
             let aspectRatio = p5Instance.windowWidth / p5Instance.windowHeight;
+            // if (aspectRatio < 0.7) { ... }
+            //   → 非常窄的螢幕（直式手機、超高比例直式螢幕）
+            //   例如 9:19.5、9:21 這類超長手機
             if (aspectRatio < 0.7) {
                 topStartY = p5Instance.height * 0.58;
-                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 10;
+                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 10;//極窄直式螢幕（超長手機）
             } else if (aspectRatio < 0.8) {
                 topStartY = p5Instance.height * 0.56;
-                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 14;
+                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 14;//   → 一般直式手機（約 9:16、10:16）例如 iPhone 13/14/15 Pro Max (428x926 ≈ 0.46)，iPhone 8 (375x667 ≈ 0.56)
             } else if (aspectRatio < 1.2) {
                 topStartY = textFrame.y + textFrame.h + barPadding * 1.5;
-                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 12;
+                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 12;//   例如 iPad 直式 (820x1180 ≈ 0.69)，或 4:3 比例螢幕
             } else if (aspectRatio < 1.6) {
                 topStartY = textFrame.y + textFrame.h + barPadding * 0.6;
-                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 13;
+                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 13;//   → 筆電、桌機常見的 16:10、3:2 螢幕例如 1280x800 (1.6)、1920x1200 (1.6)、Surface (3:2 ≈ 1.5)
             } else if (aspectRatio < 1.78) {
                 topStartY = textFrame.y + textFrame.h + barPadding * 2.5;
-                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 0.3;
+                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 0.3;//   → 16:9 螢幕（最常見的桌機/筆電）例如 1920x1080 (1.77)、1366x768 (1.78)
             } else {
                 topStartY = textFrame.y + textFrame.h + barPadding * 2.5;
-                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 16;
+                belowStartY = topStartY + topCount * (barHeight + barPadding) + barPadding * 16;//   → 超寬螢幕（21:9、32:9 等） 例如 2560x1080 (2.37)、3440x1440 (2.39)
             }
 
             // 這段程式碼的 aspectRatio 判斷，對應的螢幕比例說明如下：
             // aspectRatio = p5Instance.windowWidth / p5Instance.windowHeight
 
-            // if (aspectRatio < 0.7) { ... }
-            //   → 非常窄的螢幕（直式手機、超高比例直式螢幕）
-            //   例如 9:19.5、9:21 這類超長手機
+            
 
             // else if (aspectRatio < 0.8) { ... }
             //   → 一般直式手機（約 9:16、10:16）
