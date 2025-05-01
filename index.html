@@ -150,23 +150,44 @@
                 iframe.style.border = 'none';
                 iframe.style.position = 'absolute';
                 
-                // 啟用 iframe 內容的互動事件，允許點擊超連結
-                iframe.style.pointerEvents = 'auto'; // 從 'none' 改為 'auto'
+                // 完整啟用 iframe 所有互動功能
+                iframe.style.pointerEvents = 'auto';
+                iframe.setAttribute('allowfullscreen', 'true');
+                iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                // 確保不使用 sandbox 限制
+                iframe.removeAttribute('sandbox');
+                
+                // 確保 iframe 在最頂層
+                iframe.style.zIndex = '2000'; // 提高 z-index 確保在最上方
                 
                 // 添加 iframe 到容器
                 iframeContainer.appendChild(iframe);
                 document.body.appendChild(iframeContainer);
                 
-                // 更新互動層，確保不會阻擋超連結點擊
-                const interactionLayer = document.createElement('div');
-                interactionLayer.style.position = 'absolute';
-                interactionLayer.style.top = '40px';
-                interactionLayer.style.left = '0';
-                interactionLayer.style.width = '100%';
-                interactionLayer.style.height = 'calc(100vh - 40px)';
-                interactionLayer.style.zIndex = '1500'; 
-                interactionLayer.style.pointerEvents = 'none'; // 從 'auto' 改為 'none' 以允許點擊傳遞到iframe
-                document.body.appendChild(interactionLayer);
+                // 完全移除互動層，讓所有事件直接傳到 iframe
+                // const interactionLayer = document.createElement('div');
+                // ...原有的互動層代碼被移除...
+                
+                // 確保說明文字在 iframe 之上
+                const instructions = document.querySelector('.instructions');
+                if (instructions) {
+                    instructions.style.zIndex = '2001';
+                }
+                
+                // 監聽 iframe 加載完成事件
+                iframe.onload = function() {
+                    console.log('Iframe loaded, initializing click handlers');
+                    
+                    // 嘗試直接利用 postMessage 與 iframe 內容通訊
+                    try {
+                        setInterval(() => {
+                            // 定期發送訊息，確保 iframe 能夠響應點擊
+                            iframe.contentWindow.postMessage('enableClicks', '*');
+                        }, 1000);
+                    } catch(e) {
+                        console.log('PostMessage failed:', e);
+                    }
+                };
             } catch (error) {
                 console.error('Error initializing iframe:', error);
             }
