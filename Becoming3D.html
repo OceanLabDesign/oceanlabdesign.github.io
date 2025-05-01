@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Becoming3D | 讓回憶升維</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Noto Sans TC', sans-serif; margin: 0; background: #f8f9fa; color: #333; }
+    header { background: #0e0e2c; color: white; padding: 4rem 2rem; text-align: center; }
+    header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+    header p { font-size: 1.25rem; margin-bottom: 2rem; color: #ccc; }
+
+    section { padding: 4rem 2rem; max-width: 900px; margin: 0 auto; }
+    section h2 { font-size: 1.75rem; margin-bottom: 1rem; color: #0e0e2c; }
+    section p { font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem; }
+    .steps { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+    .step { background: white; padding: 1rem 1.5rem; border-radius: 0.75rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+
+    footer { background: #0e0e2c; color: white; text-align: center; padding: 2rem; font-size: 0.9rem; }
+    footer a { color: #a0a0ff; text-decoration: none; transition: color 0.3s; }
+    footer a:hover { color: white; text-decoration: underline; }
+    button { background: #3d5afe; color: white; border: none; padding: 0.75rem 1.5rem; font-size: 1rem; border-radius: 0.5rem; cursor: pointer; transition: background-color 0.3s; }
+    button:hover { background-color: #2a3eb1; }
+    header button { margin-top: 1rem; }
+    
+    /* 新增樣式 */
+    .feature-list { list-style-type: none; padding-left: 0; }
+    .feature-list li { margin-bottom: 0.5rem; }
+    .feature-cards { display: flex; flex-wrap: wrap; margin-top: 2rem; gap: 1rem; }
+    .feature-card { flex: 1; min-width: 200px; background: #f0f4ff; padding: 1rem; border-radius: 0.5rem; }
+    .feature-card p { font-size: 1.2rem; margin-bottom: 0.5rem; }
+    
+    /* 頁腳樣式 */
+    .footer-links { margin-bottom: 1rem; }
+    .social-links { margin-top: 1rem; margin-bottom: 1rem; }
+    .social-links a { margin: 0 0.5rem; }
+    .copyright { margin-top: 1rem; }
+    
+    /* FAQ樣式 */
+    .faq-container { margin-top: 2rem; }
+    .faq-item { background: white; padding: 1.5rem; margin-bottom: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    .faq-item h3 { margin-top: 0; color: #3d5afe; }
+    
+    /* 社群貼文樣式 */
+    .social-examples { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 2rem; }
+    .social-example { flex: 1; min-width: 300px; background: white; padding: 1.5rem; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    .social-example h3 { margin-top: 0; color: #3d5afe; }
+    .social-content { padding: 1rem; background: #f8f9fa; border-radius: 0.5rem; }
+    .hashtags { color: #3d5afe; font-weight: bold; }
+    
+    /* EDM表格樣式 */
+    .edm-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+    .edm-table th, .edm-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #ddd; }
+    .edm-table th { background-color: #f0f4ff; }
+    
+    /* 用戶見證樣式 */
+    .testimonials { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
+    .testimonial-card { background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 3px 10px rgba(0,0,0,0.08); position: relative; }
+    .testimonial-card:before { content: '\201C'; position: absolute; top: 0.5rem; left: 1rem; font-size: 3rem; color: #f0f4ff; font-family: serif; }
+    .testimonial-rating { color: #ffb400; margin-bottom: 0.75rem; }
+    .testimonial-content .quote { font-style: italic; margin-bottom: 0.75rem; line-height: 1.6; }
+    .testimonial-content .author { font-weight: bold; color: #555; text-align: right; }
+    
+    /* 影片腳本樣式 */
+    .video-script { margin-top: 2rem; }
+    .script-section { background: white; padding: 1.5rem; margin-bottom: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    .script-section h3 { margin-top: 0; color: #3d5afe; }
+    .narration { font-style: italic; color: #555; }
+    
+    /* 電商文案樣式 */
+    .ecommerce-copy { margin-top: 2rem; }
+    .copy-section { background: white; padding: 1.5rem; margin-bottom: 1rem; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+    .copy-section h3 { margin-top: 0; color: #3d5afe; }
+    
+    /* CTA區塊樣式 */
+    .cta-section { background: #f0f4ff; text-align: center; padding: 5rem 2rem; margin-top: 3rem; }
+    .cta-section h2 { font-size: 2rem; margin-bottom: 1rem; }
+    .cta-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 2rem; }
+    .btn-primary { background: #3d5afe; color: white; }
+    .btn-outline { background: transparent; color: #3d5afe; border: 2px solid #3d5afe; }
+    .btn-text { background: transparent; color: #3d5afe; border: none; text-decoration: underline; }
+    .btn-large { padding: 1rem 2rem; font-size: 1.1rem; font-weight: bold; }
+    
+    /* 響應式調整 */
+    @media (max-width: 768px) {
+      header h1 { font-size: 2rem; }
+      section { padding: 3rem 1.5rem; }
+    }
+
+    /* 藝術家展示區塊樣式 */
+    .artist-showcase { margin-top: 2rem; display: flex; flex-direction: column; gap: 2rem; }
+    .artist-card { background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 3px 10px rgba(0,0,0,0.08); display: flex; flex-direction: column; }
+    .artist-specialty { font-size: 0.9rem; color: #3d5afe; background: #f0f4ff; padding: 0.3rem 0.6rem; border-radius: 0.5rem; margin-left: 0.5rem; }
+    .artist-description { margin-bottom: 1rem; }
+    .artist-templates { background: #f8f9fa; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; }
+    .artist-templates h4 { margin-top: 0; margin-bottom: 0.75rem; color: #3d5afe; }
+    .artist-templates ul { margin: 0; padding-left: 1.5rem; }
+    .artist-templates li { margin-bottom: 0.5rem; }
+    
+    .template-usage-title { margin-top: 2.5rem; text-align: center; color: #0e0e2c; }
+    .template-usage-steps { display: flex; flex-wrap: wrap; gap: 1.5rem; margin: 1.5rem 0; }
+    .template-step { flex: 1; min-width: 200px; display: flex; align-items: flex-start; gap: 1rem; }
+    .step-number { background: #3d5afe; color: white; width: 2rem; height: 2rem; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: bold; flex-shrink: 0; }
+    .step-content { flex-grow: 1; }
+    .step-content h4 { margin-top: 0; margin-bottom: 0.5rem; color: #0e0e2c; }
+    .step-content p { margin: 0; }
+    
+    .template-benefits { background: #f0f4ff; padding: 1rem 1.5rem; border-radius: 0.75rem; margin: 2rem 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>讓回憶升維｜從一張照片到可擁有的 3D 模型</h1>
+    <p>AI 自動建模，將你的影像轉化為可互動、可列印的三維模型。打造專屬的立體記憶。</p>
+    <button onclick="window.location.href='index.html'">上傳照片，立即開始</button>
+  </header>
+
+  <section>
+    <h2>Becoming3D｜AI 記憶科技，重構回憶的立體維度</h2>
+    <p><strong>The Medium is the Message｜AI，正在重塑媒介本質</strong></p>
+    <p>AI，不只是工具，而是人與世界互動的新界面。</p>
+    <p>從 ChatGPT 到 Midjourney，生成式 AI 正在加速人類表達與創造的方式。過去需要高資本、高技術門檻的專業任務，如影像編輯、建模設計、資訊整合，如今，透過智慧工具，任何人都能即時執行。AI 賦能的時代，讓人人都能主導創作流程。</p>
+  </section>
+
+  <section>
+    <h2>Redefining Memory｜回憶的技術演進</h2>
+    <p>從繩結到符號，從相機到智慧手機，人類的記憶方式隨技術不斷進化。</p>
+    <p>自 2007 年 iPhone 問世，數位影像成為主流紀錄方式，手機相簿儲存了我們生活的每一個瞬間。然而，回憶不應只停留於螢幕中的 2D 影像。</p>
+  </section>
+
+  <section>
+    <h2>From Image to Interaction｜影像升級為互動模型</h2>
+    <p>Becoming3D 將靜態影像轉化為可操作的三維模型，讓回憶突破平面，進入立體時空。</p>
+    <p>上傳一張清晰圖片，AI 即可辨識人物、動物或物件，快速生成可旋轉、放大、編輯的 3D 模型。</p>
+    <p>這不只是模型生成，這是記憶空間的再造技術。</p>
+  </section>
+
+  <section>
+    <h2>如何運作？</h2>
+    <p>三步驟，即可完成一個屬於你的 3D 回憶模型。</p>
+    <div class="steps">
+      <div class="step"><strong>1.</strong> 上傳照片</div>
+      <div class="step"><strong>2.</strong> AI 建模與預覽</div>
+      <div class="step"><strong>3.</strong> 編輯、下載或列印</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>你的記憶，可以這樣被收藏</h2>
+    <p>從家庭紀念、公仔收藏、寵物模型到情感禮物，Becoming3D 幫你把照片變成實體回憶。</p>
+    <button onclick="window.location.href='gallery.html'">看看更多應用案例</button>
+  </section>
+
+  <section>
+    <h2>Seamless Integration｜從數位模型到實體製作</h2>
+    <p>Becoming3D 結合 AI 建模與 3D 列印工藝，打造從影像輸入到模型輸出的一站式平台。</p>
+    <p>不需要建模經驗，不需購置高階設備，即可完成整個轉換流程。</p>
+    <p>平台支援：</p>
+    <ul class="feature-list">
+      <li>• 3D 模型生成與優化</li>
+      <li>• 材質渲染與動作修飾</li>
+      <li>• 高精度列印、實體著色與後製加工</li>
+      <li>• 客製模具開發與量產對接</li>
+    </ul>
+    <p>我們不只是提供工具，而是提供一個全新的記憶運算平台。</p>
+  </section>
+
+  <section>
+    <h2>3D 列印服務</h2>
+    <p>支援多種材質與上色技術，為你的模型提供最有溫度的實體化選擇。</p>
+    <button onclick="window.location.href='pricing.html'">查看列印選項</button>
+  </section>
+
+  <section>
+    <h2>平台特約藝術家與專業模板</h2>
+    <p>Becoming3D 與專業3D藝術家合作，為您提供精心設計的模板，讓您的創作更上一層樓。</p>
+    
+    <div class="artist-showcase">
+      <div class="artist-card">
+        <div class="artist-info">
+          <h3>陳映璇 <span class="artist-specialty">角色設計</span></h3>
+          <p class="artist-description">專精於動漫風格角色建模，擅長將2D插畫轉換為富有表情的3D模型。曾為多家遊戲公司設計角色。</p>
+        </div>
+        <div class="artist-templates">
+          <h4>專業模板:</h4>
+          <ul>
+            <li>動漫人物立姿</li>
+            <li>表情豐富的頭像</li>
+            <li>卡通風格寵物</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="artist-card">
+        <div class="artist-info">
+          <h3>林志豪 <span class="artist-specialty">場景與建築</span></h3>
+          <p class="artist-description">建築背景出身的3D藝術家，專注於微縮模型與建築複製。作品細節精緻，比例精確。</p>
+        </div>
+        <div class="artist-templates">
+          <h4>專業模板:</h4>
+          <ul>
+            <li>微型建築</li>
+            <li>室內場景</li>
+            <li>景觀模型</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="artist-card">
+        <div class="artist-info">
+          <h3>王美玲 <span class="artist-specialty">飾品與雕塑</span></h3>
+          <p class="artist-description">珠寶設計師跨界3D模型創作，作品融合傳統工藝與現代技術，精於細節處理。</p>
+        </div>
+        <div class="artist-templates">
+          <h4>專業模板:</h4>
+          <ul>
+            <li>客製化飾品</li>
+            <li>雕塑藝術品</li>
+            <li>精緻擺飾</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="template-usage-title">如何使用藝術家模板?</h3>
+    <div class="template-usage-steps">
+      <div class="template-step">
+        <span class="step-number">1</span>
+        <div class="step-content">
+          <h4>選擇模板</h4>
+          <p>瀏覽藝術家作品集，選擇符合您需求的模板風格。</p>
+        </div>
+      </div>
+      <div class="template-step">
+        <span class="step-number">2</span>
+        <div class="step-content">
+          <h4>上傳照片</h4>
+          <p>上傳您想轉換的照片，系統會自動將其與選定模板融合。</p>
+        </div>
+      </div>
+      <div class="template-step">
+        <span class="step-number">3</span>
+        <div class="step-content">
+          <h4>調整與客製化</h4>
+          <p>根據需要調整細節，修改比例、姿勢或添加配件。</p>
+        </div>
+      </div>
+      <div class="template-step">
+        <span class="step-number">4</span>
+        <div class="step-content">
+          <h4>完成創作</h4>
+          <p>確認模型效果後，選擇下載或直接送印。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="template-benefits">
+      <p><strong>🎨 藝術家模板優勢：</strong> 專業藝術家設計的模板具有更高的藝術性與完成度，能為您的作品增添專業質感，適合對模型品質有更高要求的用戶。</p>
+    </div>
+
+    <button onclick="window.location.href='templates.html'">探索所有藝術家模板</button>
+  </section>
+
+  <section>
+    <h2>Becoming3D｜AI × 記憶 × 形式的再定義</h2>
+    <p>記憶不再只是照片、不只是資料，而是一種可被觀看、互動、擁有的立體體驗。</p>
+    <p>讓回憶有形、有感、有未來。</p>
+    <p>這，就是 Becoming3D 的核心價值。</p>
+    
+    <div class="feature-cards">
+      <div class="feature-card">
+        <p>🚀 AI 即時建模</p>
+      </div>
+      <div class="feature-card">
+        <p>🧠 智慧圖像辨識</p>
+      </div>
+      <div class="feature-card">
+        <p>📦 零門檻 3D 輸出</p>
+      </div>
+      <div class="feature-card">
+        <p>📡 雲端串接 × 實體製造</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>🔹 FAQ（常見問題）</h2>
+    <div class="faq-container">
+      <div class="faq-item">
+        <h3>Q：我不會建模，真的可以自己做嗎？</h3>
+        <p>A：當然可以！只需上傳一張清晰的圖片，AI 會自動為你建構可編輯的 3D 模型。無需任何建模經驗。</p>
+      </div>
+      <div class="faq-item">
+        <h3>Q：哪些類型的照片適合轉換？</h3>
+        <p>A：正面清晰、光線均勻的人像、寵物、公仔或物件皆可。我們建議背景簡單、主體完整的圖片效果最佳。</p>
+      </div>
+      <div class="faq-item">
+        <h3>Q：可以列印實體模型嗎？</h3>
+        <p>A：可以！平台整合專業 3D 列印工廠，支援模型著色、打磨與加工，直接寄送到你手上。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>🔹 用戶見證</h2>
+    <p>看看其他人如何透過 Becoming3D 保存他們最珍貴的回憶。</p>
+    
+    <div class="testimonials">
+      <div class="testimonial-card">
+        <div class="testimonial-rating">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <div class="testimonial-content">
+          <p class="quote">"為了紀念愛貓離世十週年，我上傳了牠最喜歡的照片。收到模型的那一刻，眼淚忍不住流下來。現在可以真實地摸到牠的樣子，這種體驗難以形容。"</p>
+          <p class="author">— 林小姐，寵物愛好者</p>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-rating">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <div class="testimonial-content">
+          <p class="quote">"作為玩具收藏家，我終於可以把網路上看到的經典角色直接轉成公仔！模型精細度超乎想像，細節保留完美，著色也很專業。"</p>
+          <p class="author">— 張先生，模型收藏家</p>
+        </div>
+      </div>
+      
+      <div class="testimonial-card">
+        <div class="testimonial-rating">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+        </div>
+        <div class="testimonial-content">
+          <p class="quote">"送給爸爸六十大壽的禮物！上傳了全家在日本旅行的合照，做成立體模型，爸爸收到時驚訝又感動。比相框有意義太多了，真心推薦！"</p>
+          <p class="author">— 王小姐，行銷專員</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <h2>準備好開始你的 3D 記憶旅程了嗎？</h2>
+    <p>立即加入 Becoming3D，將你珍貴的照片轉化為可觸摸的立體回憶。</p>
+    <div class="cta-buttons">
+      <button class="btn-primary btn-large" onclick="window.location.href='entrence.html'">現在就開始</button>
+      <button class="btn-outline btn-large" onclick="window.location.href='register.html'">註冊帳號</button>
+      <button class="btn-text btn-large" onclick="window.location.href='login.html'">已有帳號？登入</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>🔹 作者計畫</h2>
+    <p>成為 Becoming3D 的特約藝術家，展現您的創意並獲得額外收入。</p>
+    
+    <div class="feature-cards">
+      <div class="feature-card">
+        <p>💰 自訂價格方案</p>
+        <small>依照您的作品複雜度與專業程度，自由設定模板價格。</small>
+      </div>
+      <div class="feature-card">
+        <p>🔄 按次收費模式</p>
+        <small>每次有用戶使用您的模板，即可獲得分潤，無上限收入。</small>
+      </div>
+      <div class="feature-card">
+        <p>🤖 客製AI訓練</p>
+        <small>我們提供專屬AI模型訓練，讓您的風格更具辨識度。</small>
+      </div>
+      <div class="feature-card">
+        <p>✨ 附加功能選項</p>
+        <small>可出售特效、材質包、動作集等附加元素，增加收益。</small>
+      </div>
+      <div class="feature-card">
+        <p>🛠️ 客製加工服務</p>
+        <small>接受用戶委託，提供專業模型修改、優化與特殊處理服務。</small>
+      </div>
+    </div>
+    
+    <div class="template-benefits" style="margin-top: 2rem;">
+      <p><strong>創作者優勢：</strong> 加入作者計畫的藝術家將獲得專屬頁面展示、技術支援和行銷推廣。我們處理技術與交易細節，您只需專注於創作。每個模板都保留您的風格特色，讓作品獨一無二。</p>
+    </div>
+    
+    <div class="template-benefits">
+      <p><strong>客製加工服務：</strong> 作為特約藝術家，您可以接受用戶的專案委託，針對已生成的3D模型提供進階編輯、細節修飾、特殊效果添加等專業加工服務。您可以自訂服務內容和價格，平台將提供安全的交易環境和溝通管道。</p>
+    </div>
+    
+    <button onclick="window.location.href='author-register.html'" style="margin-top: 1.5rem;">申請加入作者計畫</button>
+    <button onclick="window.location.href='custom_services.html'" style="margin-top: 1.5rem; margin-left: 1rem;">瀏覽藝術家加工服務</button>
+  </section>
+
+  <section>
+    <h2>🔹 製造廠商招募</h2>
+    <p>我們誠摯邀請專業3D列印及模型製造廠商加入Becoming3D供應鏈網絡。</p>
+    
+    <div class="step" style="margin-bottom: 1.5rem;">
+      <h3 style="margin-top: 0;">為什麼選擇與我們合作？</h3>
+      <ul class="feature-list">
+        <li>• 穩定訂單來源，減少閒置產能</li>
+        <li>• 全自動化工單系統，減少溝通成本</li>
+        <li>• 零廣告投入，拓展新客戶群</li>
+        <li>• 技術支援與設備優化建議</li>
+      </ul>
+    </div>
+    
+    <div class="step">
+      <h3 style="margin-top: 0;">我們的需求</h3>
+      <ul class="feature-list">
+        <li>• 高品質FDM或SLA 3D列印能力</li>
+        <li>• 專業模型後製與上色技術</li>
+        <li>• 可靠的品管流程</li>
+        <li>• 準時的物流配送能力</li>
+      </ul>
+    </div>
+    
+    <p style="margin-top: 2rem;">無論您是小型工作室或大型製造商，只要符合我們的品質標準，都歡迎申請成為我們的合作夥伴。</p>
+    
+    <button onclick="window.location.href='manufacturer_apply.html'">申請成為製造夥伴</button>
+  </section>
+
+  <footer>
+    <div class="footer-links">
+      <a href="about.html">關於我們</a> | 
+      <a href="contact.html">聯繫我們</a> | 
+      <a href="terms.html">使用條款</a> | 
+      <a href="privacy.html">隱私政策</a>
+    </div>
+    <div class="social-links">
+      <a href="https://facebook.com/becoming3d" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://twitter.com/becoming3d" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://instagram.com/becoming3d" target="_blank"><i class="fab fa-instagram"></i></a>
+    </div>
+    <div class="copyright">
+      Becoming3D © 2025 — 用 AI 打造可擁有的回憶
+    </div>
+  </footer>
+
+  <!-- 非登入用戶的彈窗廣告 -->
+  <script>
+    // 延遲 10 秒後顯示彈窗
+    setTimeout(function() {
+      // 檢查用戶是否已經關閉過此彈窗
+      if (!localStorage.getItem('popupClosed')) {
+        // 這裡可以添加彈窗廣告代碼
+        if (confirm('立即註冊 Becoming3D，享受首次模型製作 8 折優惠！')) {
+          window.location.href = 'register.html?promo=first_time';
+        } else {
+          localStorage.setItem('popupClosed', 'true');
+        }
+      }
+    }, 10000);
+  </script>
+</body>
+</html>
