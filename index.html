@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OceanLabAI Cellular Automaton</title>
+    <title>OceanLabAI</title>
     <!-- Load the p5.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
     <style>
@@ -89,6 +89,56 @@
             height: 100%;
             pointer-events: auto;
         }
+        
+        /* 右上角黑色橫條樣式 */
+        #right-top-bar {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            height: 40px;
+            width: 0; /* 初始寬度為 0，將通過動畫改變 */
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2002;
+            overflow: hidden;
+            transition: width 0.8s ease-out;
+        }
+        
+        #right-top-bar-text {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-family: 'Century Gothic', Arial, sans-serif;
+            font-size: 22px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+            text-align: right;
+        }
+        
+        /* 響應式調整 */
+        @media (max-width: 768px) {
+            #right-top-bar {
+                top: 30px;
+                height: 30px;
+            }
+            
+            #right-top-bar-text {
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #right-top-bar {
+                top: 20px;
+                height: 25px;
+            }
+            
+            #right-top-bar-text {
+                font-size: 14px;
+                right: 10px;
+            }
+        }
     </style>
     <!-- Add a small script to fix the color error -->
     <script>
@@ -149,7 +199,10 @@
         <button onclick="location.reload()">Refresh Page</button>
     </div>
     
-    
+    <!-- 右上角黑色橫條 -->
+    <div id="right-top-bar">
+        <div id="right-top-bar-text">Web_Design</div>
+    </div>
     
     <script>
         // Error handling
@@ -242,6 +295,27 @@
                         console.log('PostMessage failed:', e);
                     }
                 };
+                
+                // 啟動右上角黑色橫條動畫
+                setTimeout(function() {
+                    const bar = document.getElementById('right-top-bar');
+                    const barText = document.getElementById('right-top-bar-text');
+                    
+                    // 設定黑色橫條的最終寬度為螢幕寬度的60%
+                    bar.style.width = '60%';
+                    
+                    // 當動畫進行到70%時（約0.56秒後），顯示文字
+                    setTimeout(function() {
+                        barText.style.opacity = '1';
+                    }, 560);
+                    
+                    // 為黑色橫條添加點擊事件，跳轉到Web Design頁面
+                    bar.addEventListener('click', function() {
+                        window.location.href = 'https://oceanlabdesign.github.io/web_design.html';
+                    });
+                    bar.style.cursor = 'pointer';
+                }, 800); // 延遲800毫秒後開始動畫
+                
             } catch (error) {
                 console.error('Error initializing iframe:', error);
             }
