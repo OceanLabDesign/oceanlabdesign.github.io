@@ -12,7 +12,7 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
+            overflow: auto;
             background-color: #333;
         }
         
@@ -51,6 +51,23 @@
             padding: 5px 10px;
             border-radius: 5px;
             z-index: 10;
+        }
+
+        @media (max-width: 896px) and (orientation: landscape) {
+            body {
+                overflow-y: auto;
+            }
+            
+            .iframeContainer {
+                position: relative;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            iframe {
+                height: 100%;
+                position: relative;
+            }
         }
     </style>
     <!-- Add a small script to fix the color error -->
@@ -139,7 +156,7 @@
                 iframeContainer.style.left = '0';
                 iframeContainer.style.width = '100%';
                 iframeContainer.style.height = '100vh';
-                iframeContainer.style.overflow = 'hidden';
+                iframeContainer.style.overflow = 'auto';
                 
                 // 建立 iframe，設定負邊距將頂部隱藏
                 const iframe = document.createElement('iframe');
