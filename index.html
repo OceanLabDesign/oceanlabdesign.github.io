@@ -20,6 +20,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding-top: 48px; /* 預留導覽列高度 */
         }
         
         canvas {
@@ -93,11 +94,11 @@
         /* 右上角黑色橫條樣式 */
         #right-top-bar {
             position: absolute;
-            top: 40px;
+            top: 140px;
             right: 0;
-            height: 40px;
+            height: 120px; /* 高度可根據需要調整 */
             width: 0; /* 初始寬度為 0，將通過動畫改變 */
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 1);
             z-index: 2002;
             overflow: hidden;
             transition: width 0.8s ease-out;
@@ -110,10 +111,11 @@
             transform: translateY(-50%);
             color: white; /* 初始顏色，將由JavaScript動態設置 */
             font-family: 'Century Gothic', Arial, sans-serif;
-            font-size: 22px;
+            font-size: calc(0.9 * var(--bar-height, 80px));
             opacity: 0;
             transition: opacity 0.5s ease-in, color 0.5s ease;
             text-align: right;
+            padding-right: calc(40% - 20px); /* 根據橫條長度，從右邊推一個比例距離 */
         }
         
         /* 響應式調整 */
@@ -138,6 +140,40 @@
                 font-size: 14px;
                 right: 10px;
             }
+        }
+
+        /* 上方固定導覽列 */
+        #top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 48px;
+            background: #f5f5f7;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            z-index: 4000;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+        }
+        #top-nav .nav-link {
+            color: #222;
+            text-decoration: none;
+            font-size: calc(0.9 * var(--bar-height, 48px));
+            margin-right: 32px;
+            padding: 0 6px;
+            line-height: 48px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-bottom 0.2s;
+        }
+        #top-nav .nav-link:last-child {
+            margin-right: 0;
+        }
+        #top-nav .nav-link:hover {
+            color: #0070f3;
+            border-bottom: 2px solid #0070f3;
+            background: #ececec;
+            border-radius: 4px;
         }
     </style>
     <!-- Add a small script to fix the color error -->
@@ -252,10 +288,15 @@
         <button onclick="location.reload()">Refresh Page</button>
     </div>
     
-    <!-- 右上角黑色橫條 -->
-    <div id="right-top-bar">
-        <div id="right-top-bar-text">Web_Design</div>
-    </div>
+    <!-- 右上角黑色橫條（自動產生，這裡不再寫死多個div） -->
+    <div id="right-top-bars"></div>
+
+    <!-- 上方固定導覽列 -->
+    <nav id="top-nav">
+        <a class="nav-link" href="https://oceanlabdesign.github.io/about.html">About us</a>
+        <a class="nav-link" href="https://oceanlabdesign.github.io/privacy.html">Privacy Policy</a>
+        <a class="nav-link" href="https://oceanlabdesign.github.io/service.html">Service Policy</a>
+    </nav>
     
     <script>
         // Error handling
@@ -306,7 +347,7 @@
                 // 建立 iframe，設定負邊距將頂部隱藏
                 const iframe = document.createElement('iframe');
                 iframe.id = 'main-iframe'; // 加入唯一 id
-                iframe.src = 'https://editor.p5js.org/ks.architect01/full/wTq_4XvFQ';
+                iframe.src = 'https://editor.p5js.org/ks.architect01/full/QU_im7pMR';
                 iframe.style.width = '100%';
                 iframe.style.height = 'calc(100vh + 40px)'; // 增加高度
                 iframe.style.marginTop = '-43px'; // 負邊距隱藏頂部
@@ -366,35 +407,102 @@
                 };
                 
                 // 啟動右上角黑色橫條動畫
-                setTimeout(function() {
-                    const bar = document.getElementById('right-top-bar');
-                    const barText = document.getElementById('right-top-bar-text');
-                    
-                    // 設定黑色橫條的最終寬度為螢幕寬度的60%
-                    bar.style.width = '60%';
-                    
-                    // 當動畫進行到70%時（約0.56秒後），顯示文字
-                    setTimeout(function() {
-                        // 設置初始對比顏色
-                        updateTextColor();
-                        barText.style.opacity = '1';
-                    }, 560);
-                    
-                    // 為黑色橫條添加點擊事件，跳轉到Web Design頁面
-                    bar.addEventListener('click', function() {
-                        window.location.href = 'https://oceanlabdesign.github.io/web_design.html';
-                    });
-                    bar.style.cursor = 'pointer';
-                }, 800); // 延遲800毫秒後開始動畫
-                
+                // 移除舊的單一 bar 點擊事件設定，改由 renderRightTopBars 動態處理
             } catch (error) {
                 console.error('Error initializing iframe:', error);
             }
         });
+
+        // 服務項目陣列
+        const serviceBars = [
+            { label: "Web_Design", link: "https://oceanlabdesign.github.io/web_design.html" },
+            { label: "Digital_Art_Design", link: "#" },
+            { label: "UI_UX_Design", link: "#" }
+            // 你可以在這裡增減服務項目
+        ];
+
+        // 動態產生黑色橫條
+        function renderRightTopBars() {
+            const container = document.getElementById('right-top-bars');
+            container.innerHTML = '';
+            const barHeight = 120;
+            const barGap = 400;
+            const barStartTop = 140;
+            const minBarWidth = 180; // 最小寬度
+            const maxBarWidth = Math.floor(window.innerWidth * 0.8); // 最大寬度
+
+            // 建立一個隱藏的span用於測量文字寬度
+            const measureSpan = document.createElement('span');
+            measureSpan.style.visibility = 'hidden';
+            measureSpan.style.position = 'absolute';
+            measureSpan.style.fontFamily = "'Century Gothic', Arial, sans-serif";
+            measureSpan.style.fontSize = 'calc(0.9 * 80px)';
+            measureSpan.style.whiteSpace = 'nowrap';
+            document.body.appendChild(measureSpan);
+
+            serviceBars.forEach((service, idx) => {
+                // 測量文字寬度
+                measureSpan.textContent = service.label;
+                const textWidth = measureSpan.offsetWidth;
+
+                // 計算橫條寬度（加上一些padding，並限制最大最小）
+                const barWidth = Math.max(minBarWidth, Math.min(textWidth *1.618, maxBarWidth));
+
+                const bar = document.createElement('div');
+                bar.className = 'right-top-bar';
+                bar.style.position = 'absolute';
+                bar.style.top = (barStartTop + idx * (barHeight + barGap)) + 'px';
+                bar.style.right = '0';
+                bar.style.height = barHeight + 'px';
+                bar.style.width = '0';
+                bar.style.backgroundColor = 'rgba(0,0,0,1)';
+                bar.style.zIndex = 2002;
+                bar.style.overflow = 'hidden';
+                bar.style.transition = 'width 0.8s cubic-bezier(.4,0,.2,1)';
+
+                const barText = document.createElement('div');
+                barText.className = 'right-top-bar-text';
+                barText.textContent = service.label;
+                barText.style.position = 'absolute';
+                barText.style.right = '20px';
+                barText.style.top = '50%';
+                barText.style.transform = 'translateY(-50%)';
+                barText.style.color = 'white';
+                barText.style.fontFamily = "'Century Gothic', Arial, sans-serif";
+                barText.style.fontSize = 'calc(0.9 * 80px)';
+                barText.style.opacity = '0';
+                barText.style.transition = 'opacity 0.5s ease-in, color 0.5s ease';
+                barText.style.textAlign = 'right';
+                barText.style.paddingRight = '0';
+
+                bar.appendChild(barText);
+                container.appendChild(bar);
+
+                // 動畫與點擊事件
+                setTimeout(() => {
+                    bar.style.width = barWidth + 'px';
+                    setTimeout(() => {
+                        barText.style.opacity = '1';
+                    }, 560);
+                }, 800 + idx * 200);
+
+                // 這裡已經根據 service.link 動態處理連結
+                bar.addEventListener('click', function() {
+                    if (service.link && service.link !== "#") {
+                        window.location.href = service.link;
+                    }
+                });
+                bar.style.cursor = 'pointer';
+            });
+
+            // 移除測量用span
+            document.body.removeChild(measureSpan);
+        }
+
+        // 呼叫渲染函數
+        renderRightTopBars();
     </script>
-    
-    
-    </body>
-    </html>
+</body>
+</html>
 
 
