@@ -2,3 +2,4 @@ git-commands.sh
 setup_git.sh
 switch_to_main.sh
 test_script.html    
+image_creater.py
