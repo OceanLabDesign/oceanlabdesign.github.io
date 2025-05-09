@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>From Video to Editable 3D Mesh</title>
+  <style>
+    body {
+      font-family: "Noto Sans TC", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background: #222;
+      color: #fff;
+      padding: 1rem 2rem;
+      text-align: center;
+    }
+    section {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+    h2 {
+      border-left: 5px solid #4CAF50;
+      padding-left: 0.5rem;
+    }
+    pre {
+      background: #eee;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+    button {
+      padding: 0.6rem 1rem;
+      background: #4CAF50;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .step {
+      margin-bottom: 3rem;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🎥 From Video to Editable 3D Mesh</h1>
+  </header>
+
+  <section>
+    <div class="step">
+      <h2>1️⃣ 影片轉圖片影格</h2>
+      <p>使用 ffmpeg 將影片切成影格圖片。</p>
+      <pre>ffmpeg -i input_video.mp4 -qscale:v 2 frames/frame_%04d.jpg</pre>
+      <button>📁 上傳影片</button>
+    </div>
+
+    <div class="step">
+      <h2>2️⃣ 使用 COLMAP 估算相機姿態</h2>
+      <p>使用 COLMAP 產生相機姿態與特徵點資料。</p>
+      <pre>colmap feature_extractor --database_path colmap_db/database.db --image_path frames
+colmap exhaustive_matcher --database_path colmap_db/database.db
+colmap mapper --database_path colmap_db/database.db --image_path frames --output_path colmap_sparse</pre>
+      <button>▶️ 執行 COLMAP</button>
+    </div>
+
+    <div class="step">
+      <h2>3️⃣ 準備資料給 MAtCha 使用</h2>
+      <p>確認輸出結構與檔名格式後將資料移動。</p>
+      <pre>mkdir matcha_input
+cp -r frames matcha_input/images
+cp colmap_sparse/0/*.txt matcha_input/colmap_output</pre>
+    </div>
+
+    <div class="step">
+      <h2>4️⃣ 執行 MAtCha 進行 3D 重建</h2>
+      <p>透過 MAtCha 執行模型重建與訓練。</p>
+      <pre>conda activate matcha_env
+cd MAtCha
+python train.py -s ../matcha_input/colmap_output -o ../matcha_output --sfm_config posed --image_dir ../matcha_input/images --image_idx 0 1 2 3 4</pre>
+      <button>🧠 開始訓練</button>
+    </div>
+
+    <div class="step">
+      <h2>✅ 成果展示</h2>
+      <p>匯出格式與 3D 模型預覽。</p>
+      <button>📤 下載 OBJ</button>
+      <button>📤 下載 glTF</button>
+      <!-- 嵌入式 viewer 占位 -->
+      <div style="margin-top: 1rem; height: 300px; background: #ccc; text-align: center; line-height: 300px;">[3D Viewer Placeholder]</div>
+    </div>
+
+    <div class="step">
+      <h2>🧠 小技巧與常見問題</h2>
+      <ul>
+        <li>使用 colmap GUI 選圖效果更佳</li>
+        <li>Blender 可進行後處理與貼圖烘焙</li>
+        <li>匯出格式支援 OBJ、FBX、STL 等</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    📦 專案連結：<a href="https://github.com/Anttwo/MAtCha" target="_blank">GitHub Repo</a>｜聯絡我們
+  </footer>
+</body>
+</html>

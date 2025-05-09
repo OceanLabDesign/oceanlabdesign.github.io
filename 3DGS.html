@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>From Video to 3D Mesh | OceanLab</title>
+    <!-- Font imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Code highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #4ade80;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            --code-bg: #282c34;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.7;
+            color: var(--dark);
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 7rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://i.imgur.com/ZVREmKz.png') no-repeat center center;
+            opacity: 0.1;
+            background-size: cover;
+            z-index: 0;
+        }
+        
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+        }
+        
+        h2 {
+            font-size: 2.2rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            color: var(--primary);
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            opacity: 0.85;
+            max-width: 800px;
+        }
+        
+        .step {
+            margin: 4rem 0;
+            padding: 2rem;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border: 1px solid var(--light-gray);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+        
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--secondary);
+            color: var(--dark);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        
+        .requirements {
+            background-color: #f1f5f9;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 3rem 0;
+        }
+        
+        .requirements ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .requirements li {
+            margin-bottom: 0.8rem;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .requirements li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+        
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #f1f5f9;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .code-block {
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 4px;
+            color: #aaa;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .tips-tricks {
+            margin-top: 4rem;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            padding: 2rem;
+            border-radius: 12px;
+        }
+        
+        .tips-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .tip-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .results {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 3rem;
+        }
+        
+        .result-files {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .result-file {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .file-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .workflow-diagram {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            text-align: center;
+        }
+        
+        .diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .step-box {
+            flex: 1;
+            min-width: 120px;
+            padding: 1rem;
+            margin: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 8px;
+            position: relative;
+            text-align: center;
+        }
+        
+        .step-box::after {
+            content: "➔";
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 1.5rem;
+            z-index: 1;
+        }
+        
+        .step-box:last-child::after {
+            display: none;
+        }
+        
+        .step-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        footer {
+            margin-top: 4rem;
+            padding: 2rem 0;
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            transform: translateY(20px);
+            font-size: 1.5rem;
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .step-box {
+                min-width: 100px;
+                margin: 0.25rem;
+                padding: 0.75rem;
+            }
+            
+            .step-box::after {
+                right: -10px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            
+            header {
+                padding: 4rem 0 3rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .step {
+                padding: 1.5rem;
+            }
+            
+            .diagram {
+                flex-direction: column;
+            }
+            
+            .step-box {
+                width: 80%;
+                margin: 0.5rem 0;
+            }
+            
+            .step-box::after {
+                content: "⬇";
+                right: 50%;
+                bottom: -25px;
+                top: auto;
+                transform: translateX(50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎥 From Video to Editable 3D Mesh</h1>
+            <p class="subtitle">The most stable workflow for transforming videos into high-quality 3D models using COLMAP and MAtCha Gaussians</p>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="workflow-diagram">
+            <h2>Complete Workflow</h2>
+            <div class="diagram">
+                <div class="step-box">
+                    <div class="step-icon"><i class="fas fa-video"></i></div>
+                    <div>Video</div>
+                </div>
+                <div class="step-box">
+                    <div class="step-icon"><i class="fas fa-images"></i></div>
+                    <div>Frames</div>
+                </div>
+                <div class="step-box">
+                    <div class="step-icon"><i class="fas fa-camera"></i></div>
+                    <div>COLMAP</div>
+                </div>
+                <div class="step-box">
+                    <div class="step-icon"><i class="fas fa-cube"></i></div>
+                    <div>MAtCha</div>
+                </div>
+                <div class="step-box">
+                    <div class="step-icon"><i class="fas fa-th"></i></div>
+                    <div>3D Mesh</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="requirements">
+            <h2>📦 System Requirements</h2>
+            <ul>
+                <li>Windows + WSL2 (Ubuntu 22.04)</li>
+                <li>CUDA-enabled GPU</li>
+                <li>Python 3.8 or newer</li>
+                <li>Required software: ffmpeg, COLMAP, conda, git</li>
+                <li>MAtCha installed from <a href="https://github.com/Anttwo/MAtCha" target="_blank">https://github.com/Anttwo/MAtCha</a></li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">1</div>
+            <h3>Extract Frames from Video</h3>
+            <p>First, we need to extract high-quality image frames from your video:</p>
+            
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code class="language-bash">mkdir -p frames
+ffmpeg -i input_video.mp4 -qscale:v 2 frames/frame_%04d.jpg</code></pre>
+            </div>
+            
+            <p>This command creates a directory named "frames" and extracts high-quality JPG images from your video file.</p>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">2</div>
+            <h3>Use COLMAP for Camera Pose Estimation</h3>
+            <p>Next, we'll use COLMAP to analyze the images and reconstruct camera positions:</p>
+            
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code class="language-bash">mkdir colmap_db colmap_sparse
+
+colmap feature_extractor \
+  --database_path colmap_db/database.db \
+  --image_path frames
+
+colmap exhaustive_matcher \
+  --database_path colmap_db/database.db
+
+colmap mapper \
+  --database_path colmap_db/database.db \
+  --image_path frames \
+  --output_path colmap_sparse</code></pre>
+            </div>
+            
+            <p>This three-step process extracts features from your images, matches these features across frames, and calculates the camera positions.</p>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">3</div>
+            <h3>Prepare Data for MAtCha</h3>
+            <p>Now we'll organize the data in a format that MAtCha can work with:</p>
+            
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code class="language-bash">mkdir matcha_input
+cp -r frames matcha_input/images
+cp colmap_sparse/0/*.txt matcha_input/colmap_output</code></pre>
+            </div>
+            
+            <p><strong>Important notes:</strong></p>
+            <ul>
+                <li>Make sure the image filenames in <code>matcha_input/images/</code> match exactly with the names in <code>images.txt</code></li>
+                <li>For best results, use 5-10 images that show different angles of your subject</li>
+            </ul>
+        </div>
+        
+        <div class="step">
+            <div class="step-number">4</div>
+            <h3>Run MAtCha for 3D Reconstruction</h3>
+            <p>Finally, we'll run MAtCha to convert the data into a 3D mesh:</p>
+            
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                <pre><code class="language-bash">conda activate matcha_env
+cd MAtCha
+
+python train.py \
+  -s ../matcha_input/colmap_output \
+  -o ../matcha_output \
+  --sfm_config posed \
+  --image_dir ../matcha_input/images \
+  --image_idx 0 1 2 3 4</code></pre>
+            </div>
+            
+            <p>The <code>image_idx</code> parameter specifies which images to use from the COLMAP data, typically determined by the order in <code>images.txt</code>.</p>
+        </div>
+        
+        <div class="results">
+            <h2>✅ Results</h2>
+            <p>After processing completes, you'll have high-quality 3D models ready for use:</p>
+            
+            <div class="result-files">
+                <div class="result-file">
+                    <div class="file-icon"><i class="fas fa-cube"></i></div>
+                    <div>mesh.obj</div>
+                </div>
+                <div class="result-file">
+                    <div class="file-icon"><i class="fas fa-image"></i></div>
+                    <div>texture maps</div>
+                </div>
+                <div class="result-file">
+                    <div class="file-icon"><i class="fas fa-project-diagram"></i></div>
+                    <div>normals & materials</div>
+                </div>
+            </div>
+            
+            <p>These files can be imported into Blender, Unreal Engine, Unity, or any other 3D software for further editing and use.</p>
+        </div>
+        
+        <div class="tips-tricks">
+            <h2>🧠 Tips & Tricks</h2>
+            <div class="tips-list">
+                <div class="tip-card">
+                    <h3>Preview with COLMAP GUI</h3>
+                    <p>Use the COLMAP GUI to preview point clouds and camera positions before selecting images for processing.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>Post-Processing in Blender</h3>
+                    <p>Use Blender to clean up meshes, bake textures, and optimize models for different applications.</p>
+                </div>
+                <div class="tip-card">
+                    <h3>Export for Different Uses</h3>
+                    <p>Export your models as glTF for web, FBX for animation software, or STL for 3D printing.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>© 2024 OceanLab. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+    
+    <script>
+        // Copy code function
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling;
+            const code = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                button.textContent = "Copied!";
+                setTimeout(() => {
+                    button.textContent = "Copy";
+                }, 2000);
+            });
+        }
+        
+        // Back to top button visibility
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
